@@ -1,5 +1,5 @@
 use diesel::prelude::*;
-use diesel_demo::*;
+use rust_diesel::*;
 use std::env::args;
 
 fn main() {

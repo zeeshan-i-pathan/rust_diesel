@@ -1,9 +1,9 @@
 use std::io::{stdin, Read};
 
-use diesel_demo::{create_post, establish_connection};
+use rust_diesel::{establish_connection, models::NewPost, repository::PostRepository};
 
 fn main() {
-    let connection = &mut establish_connection();
+    let connection = establish_connection();
 
     let mut title = String::new();
     let mut body = String::new();
@@ -15,7 +15,12 @@ fn main() {
     println!("\nOk! Let's write {title} (Press {EOF} when finished)\n",);
     stdin().read_to_string(&mut body).unwrap();
 
-    let post = create_post(connection, title, &body);
+    let post = PostRepository::new(connection)
+        .create(NewPost {
+            title: title,
+            body: &body,
+        })
+        .unwrap();
     println!("\nSaved draft {title} with id {}", post.id);
 }
 

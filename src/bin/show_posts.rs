@@ -1,17 +1,8 @@
-use self::models::*;
-use diesel::prelude::*;
-use diesel_demo::*;
+use rust_diesel::{repository::PostRepository, *};
 
 fn main() {
-    use self::schema::posts::dsl::*;
-
-    let connection = &mut establish_connection();
-    let results = posts
-        .filter(published.eq(true))
-        .limit(5)
-        .select(Post::as_select())
-        .load(connection)
-        .expect("Error loading posts");
+    let connection = establish_connection();
+    let results = PostRepository::new(connection).find_all().unwrap();
 
     println!("Displaying {} posts", results.len());
     for post in results {
